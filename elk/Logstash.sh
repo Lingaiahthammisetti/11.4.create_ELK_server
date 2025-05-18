@@ -53,3 +53,6 @@ VALIDATE $? "restart logstash"
 
 systemctl enable logstash &>>$LOGFILE
 VALIDATE $? "enable logstash"
+
+systemctl status logstash &>>$LOGFILE
+VALIDATE $? "logstash status"

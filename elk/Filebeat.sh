@@ -52,4 +52,7 @@ VALIDATE $? " Elastic search ip address change "
 systemctl start filebeat &>>$LOGFILE
 VALIDATE $? "start filebeat"
 
+systemctl status filebeat &>>$LOGFILE
+VALIDATE $? "filebeat status"
+
 

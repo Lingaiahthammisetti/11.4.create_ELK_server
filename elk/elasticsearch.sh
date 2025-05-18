@@ -30,7 +30,7 @@ fi
 sudo yum install java-11-openjdk-devel -y &>>$LOGFILE
 VALIDATE $? "Java 11 Installation"
 
-sudo cp /home/ec2-user/11.4.create_ELK_server/elk_installation/elasticsearch.repo /etc/yum.repos.d/elasticsearch.repo &>>$LOGFILE
+sudo cp /home/ec2-user/11.4.create_ELK_server/elk/elasticsearch.repo /etc/yum.repos.d/elasticsearch.repo &>>$LOGFILE
 VALIDATE $? "created elasticsearch.repo"
 
 sudo yum install elasticsearch -y &>>$LOGFILE

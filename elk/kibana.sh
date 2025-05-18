@@ -46,3 +46,6 @@ VALIDATE $? "restart kibana"
 
 sudo systemctl enable kibana &>>$LOGFILE
 VALIDATE $? "enable kibana"
+
+sudo systemctl status kibana &>>$LOGFILE
+VALIDATE $? "kibana status"
