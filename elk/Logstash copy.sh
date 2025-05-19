@@ -27,24 +27,10 @@ else
     echo "You are super user."
 fi
 
-sudo rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch &>>$LOGFILE
-VALIDATE $? "the GPG key from Elastic"
-
-echo "[logstash-8.x]
-name=Elastic repository for 8.x packages
-baseurl=https://artifacts.elastic.co/packages/8.x/yum
-gpgcheck=1
-gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
-enabled=1
-autorefresh=1
-type=rpm-md  " > /etc/yum.repos.d/logstash.repo &>>$LOGFILE
-VALIDATE $? "adding logstash repo"
-
 yum install logstash -y &>>$LOGFILE
 VALIDATE $? "logstash Installation"
 
-echo "
-input {
+echo "input {
   beats {
     port => 5044
   }
@@ -59,8 +45,8 @@ output {
     hosts => ["http://localhost:9200"]
     index => "%{[@metadata][beat]}-%{[@metadata][version]}"
   }
-} 
-" > /etc/logstash/conf.d/logstash.conf
+}  " >/etc/logstash/conf.d/logstash.conf &>>$LOGFILE
+VALIDATE $? "Configure logstash input and output"
 
 systemctl restart logstash &>>$LOGFILE
 VALIDATE $? "restart logstash"

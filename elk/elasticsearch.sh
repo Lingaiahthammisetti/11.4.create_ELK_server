@@ -27,27 +27,34 @@ else
     echo "You are super user."
 fi
 
-sudo yum install java-11-openjdk-devel -y &>>$LOGFILE
+yum install java-11-openjdk-devel -y  &>>$LOGFILE
 VALIDATE $? "Java 11 Installation"
 
-sudo cp /home/ec2-user/11.4.create_ELK_server/elk/elasticsearch.repo /etc/yum.repos.d/elasticsearch.repo &>>$LOGFILE
-VALIDATE $? "created elasticsearch.repo"
+echo "
+[elasticsearch]
+name=Elasticsearch repository for 7.x packages
+baseurl=https://artifacts.elastic.co/packages/7.x/yum
+gpgcheck=1
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+autorefresh=1
+type=rpm-md
+" > /etc/yum.repos.d/elasticsearch.repo
 
-sudo yum install elasticsearch -y &>>$LOGFILE
+yum install elasticsearch -y &>>$LOGFILE
 VALIDATE $? "elasticsearch Installation"
 
-sudo sed -i 's/#http.port: 9200/http.port: 9200/' /etc/elasticsearch/elasticsearch.yml &>> $LOGFILE
+sed -i 's/#http.port: 9200/http.port: 9200/' /etc/elasticsearch/elasticsearch.yml &>> $LOGFILE
 VALIDATE $? "replaced http.port: 9200"
 
-sudo sed -i 's/#network.host: 192.168.0.1/network.host: 0.0.0.0/' /etc/elasticsearch/elasticsearch.yml &>> $LOGFILE
+sed -i 's/#network.host: 192.168.0.1/network.host: 0.0.0.0/' /etc/elasticsearch/elasticsearch.yml &>> $LOGFILE
 VALIDATE $? "replaced network.host: 0.0.0.0"
 
-sudo sed -i '/^#discovery/ a discovery.type: single-node' /etc/elasticsearch/elasticsearch.yml &>> $LOGFILE
+sed -i '/^#discovery/ a discovery.type: single-node' /etc/elasticsearch/elasticsearch.yml &>> $LOGFILE
 VALIDATE $? "adding discovery.type: single-node"
 
-
-sudo systemctl restart elasticsearch &>>$LOGFILE
+systemctl restart elasticsearch &>>$LOGFILE
 VALIDATE $? "elasticsearch restarting service"
 
-sudo systemctl enable elasticsearch &>>$LOGFILE
+systemctl enable elasticsearch &>>$LOGFILE
 VALIDATE $? "elasticsearch enable service"
