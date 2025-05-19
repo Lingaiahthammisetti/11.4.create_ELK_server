@@ -8,7 +8,7 @@ variable "ec2_instance" {
    }
 }
 variable "zone_id" {
-    default = "Z08032413NTE19HSX8KA1"
+    default = "Z07608533HHBQHW47XU3F"
 }
 variable "domain_name" {
   default = "lingaiah.online"

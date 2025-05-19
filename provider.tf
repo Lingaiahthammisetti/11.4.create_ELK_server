@@ -6,10 +6,10 @@ terraform {
     }
   }
   backend "s3" {
-    bucket = "elk-server-remote-state"
+    bucket = "monitoring-remote-state"
     key    = "elk_install_ec2"
     region = "us-east-1"
-    dynamodb_table = "elk-server-locking"
+    dynamodb_table = "monitoring-locking"
     }
   }
 provider "aws" {
