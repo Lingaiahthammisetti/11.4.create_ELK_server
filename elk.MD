@@ -207,6 +207,26 @@ input {
     port => 5044
   }
 }
+filter {
+      grok {
+        match => { "message" => "%{IP:client_ip} \[%{HTTPDATE:timestamp}\] %{WORD:http_method} %{URIPATH:request_path} %{NOTSPACE:http_version} %{NUMBER:status:int} %{NUMBER:response_size:int} \"%{URI:referrer}\" %{NUMBER:response_time:float}" }
+      }
+}
+output {
+  elasticsearch {
+    hosts => ["http://localhost:9200"]
+    index => "%{[@metadata][beat]}-%{[@metadata][version]}"
+  }
+}
+```
+
+
+```
+input {
+  beats {
+    port => 5044
+  }
+}
 
 output {
   elasticsearch {
