@@ -58,3 +58,6 @@ VALIDATE $? "elasticsearch restarting service"
 
 systemctl enable elasticsearch &>>$LOGFILE
 VALIDATE $? "elasticsearch enable service"
+
+systemctl status elasticsearch &>>$LOGFILE
+VALIDATE $? "elasticsearch status"
