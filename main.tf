@@ -8,7 +8,7 @@ resource "aws_instance" "elk_ec2" {
 }
 resource "aws_route53_record" "elk_r53" {
     zone_id = var.zone_id
-    name    = "elk.${var.domain_name}"
+    name    = "elastic-search.${var.domain_name}"
     type    = "A"
     ttl     = 1
     records = [aws_instance.elk_ec2.public_ip]
