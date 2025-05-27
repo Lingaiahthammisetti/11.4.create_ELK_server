@@ -57,7 +57,8 @@ type=rpm-md
 yum install logstash -y &>>$LOGFILE
 VALIDATE $? "logstash Installation"
 
-echo "input {
+echo "
+input {
   beats {
     port => 5044
   }
@@ -72,7 +73,7 @@ output {
     hosts => ["http://localhost:9200"]
     index => "%{[@metadata][beat]}-%{[@metadata][version]}"
   }
-}  " >/etc/logstash/conf.d/logstash.conf &>>$LOGFILE
+}  " > /etc/logstash/conf.d/logstash.conf &>>$LOGFILE
 VALIDATE $? "Configure logstash input and output"
 
 systemctl restart logstash &>>$LOGFILE
