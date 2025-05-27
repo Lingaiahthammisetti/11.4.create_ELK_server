@@ -53,27 +53,46 @@ autorefresh=1
 type=rpm-md
  " > /etc/yum.repos.d/logstash.repo
 
-
 yum install logstash -y &>>$LOGFILE
 VALIDATE $? "logstash Installation"
 
-echo "
+# echo "
+# input {
+#   beats {
+#     port => 5044
+#   }
+# }
+# filter {
+#       grok {
+#         match => { "message" => "%{IP:client_ip} \[%{HTTPDATE:timestamp}\] %{WORD:http_method} %{URIPATH:request_path} %{NOTSPACE:http_version} %{NUMBER:status:int} %{NUMBER:response_size:int} \"%{URI:referrer}\" %{NUMBER:response_time:float}" }
+#       }
+# }
+# output {
+#   elasticsearch {
+#     hosts => ["http://localhost:9200"]
+#     index => "%{[@metadata][beat]}-%{[@metadata][version]}"
+#   }
+# }" > /etc/logstash/conf.d/logstash.conf &>>$LOGFILE
+# VALIDATE $? "Configure logstash input and output"
+
+sudo tee /etc/logstash/conf.d/logstash.conf > /dev/null <<EOF
 input {
   beats {
     port => 5044
   }
 }
 filter {
-      grok {
-        match => { "message" => "%{IP:client_ip} \[%{HTTPDATE:timestamp}\] %{WORD:http_method} %{URIPATH:request_path} %{NOTSPACE:http_version} %{NUMBER:status:int} %{NUMBER:response_size:int} \"%{URI:referrer}\" %{NUMBER:response_time:float}" }
-      }
+  grok {
+    match => { "message" => "%{IP:client_ip} \[%{HTTPDATE:timestamp}\] %{WORD:http_method} %{URIPATH:request_path} %{NOTSPACE:http_version} %{NUMBER:status:int} %{NUMBER:response_size:int} \"%{URI:referrer}\" %{NUMBER:response_time:float}" }
+  }
 }
 output {
   elasticsearch {
     hosts => ["http://localhost:9200"]
     index => "%{[@metadata][beat]}-%{[@metadata][version]}"
   }
-}  " > /etc/logstash/conf.d/logstash.conf &>>$LOGFILE
+}
+EOF
 VALIDATE $? "Configure logstash input and output"
 
 systemctl restart logstash &>>$LOGFILE
